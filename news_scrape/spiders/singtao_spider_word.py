@@ -2,6 +2,7 @@ from docx import Document
 from docx.shared import Inches
 import scrapy
 import re
+import csv
 from scrapy.http.request import Request
 from scrapy.selector import Selector
 
@@ -12,39 +13,14 @@ class SingtaoSpider(scrapy.Spider):
     name = "SingtaoWord"
 
     def start_requests(self):
-        # Most Read
-        url = 'https://www.singtaousa.com/la/'
-        request = Request(url=url, callback=self.parse_most_read)
-        request.meta['type'] = 'Most Read'
-        yield request
-
-        # SoCal Section
-        url = 'https://www.singtaousa.com/la/453-%E5%8D%97%E5%8A%A0%E6%96%B0%E8%81%9E/'
-        request = Request(url=url, callback=self.parse_socal)
-        request.meta['type'] = 'Southern California'
-        yield request
-
-    def parse_most_read(self, response):
-        sel = Selector(response)
-
-        links = sel.xpath('//*[@id="daily"]/li/div/div/a/@href')
-        string_links = links.extract()
-
-        for link in string_links:
-            request = Request(link, callback=self.parse_link)
-            request.meta['type'] = response.meta['type']
-            yield request
-
-    def parse_socal(self, response):
-        sel = Selector(response)
-
-        links = sel.xpath('//*[@id="mobTouchSwipeWrap"]/div/div/div/div/div/div/a/@href')
-        string_links = links.extract()
-
-        for link in string_links:
-            request = Request(link, callback=self.parse_link)
-            request.meta['type'] = response.meta['type']
-            yield request
+        # Open csv file for reading purposes
+        with open('./csv/singtao.csv') as ffile:
+            reader = csv.reader(ffile, delimiter=',')
+            for row in reader:
+                request = Request(row[3], callback=self.parse_link)
+                request.meta['type'] = row[4]
+                request.meta['id'] = row[0]
+                yield request
 
     def parse_link(self, response):
         sel = Selector(response)
@@ -58,5 +34,5 @@ class SingtaoSpider(scrapy.Spider):
             full_content += paragraph
 
         full_content = full_content.encode('unicode-escape').decode('unicode-escape')
-        document.add_paragraph("Article: " + full_content)
+        document.add_paragraph(response.meta['id'] + ": " + full_content)
         document.save('./word/singtao.docx')

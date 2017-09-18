@@ -2,6 +2,7 @@ from docx import Document
 from docx.shared import Inches
 import scrapy
 import re
+import csv
 from scrapy.http.request import Request
 from scrapy.selector import Selector
 
@@ -12,39 +13,13 @@ class ChinaPressSpider(scrapy.Spider):
     name = "ChinaPressWord"
 
     def start_requests(self):
-        # Most Read
-        url = 'http://www.uschinapress.com/'
-        request = Request(url=url, callback=self.parse_most_read)
-        request.meta['type'] = 'Most Read'
-        yield request
-
-        # Washington Section
-        url = 'http://news.uschinapress.com/Washington/'
-        request = Request(url=url, callback=self.parse_socal)
-        request.meta['type'] = 'Washington'
-        yield request
-
-    def parse_most_read(self, response):
-        sel = Selector(response)
-
-        links = sel.xpath('//*[@id="index_rank_tab1"]/li/a/@href')
-        string_links = links.extract()
-
-        for link in string_links:
-            request = Request(link, callback=self.parse_link)
-            request.meta['type'] = response.meta['type']
-            yield request
-
-    def parse_socal(self, response):
-        sel = Selector(response)
-
-        links = sel.xpath('//*[@id="Con_rank_tab1"]/li/a/@href')
-        string_links = links.extract()
-
-        for link in string_links:
-            request = Request(link, callback=self.parse_link)
-            request.meta['type'] = response.meta['type']
-            yield request
+        with open('./csv/chinapress.csv') as ffile:
+            reader = csv.reader(ffile, delimiter=',')
+            for row in reader:
+                request = Request(row[3], callback=self.parse_link)
+                request.meta['type'] = row[4]
+                request.meta['id'] = row[0]
+                yield request
 
     def parse_link(self, response):
         sel = Selector(response)
@@ -63,5 +38,5 @@ class ChinaPressSpider(scrapy.Spider):
             full_content += paragraph
 
         full_content = full_content.encode('unicode-escape').decode('unicode-escape')
-        document.add_paragraph("Article: " + full_content)
+        document.add_paragraph(response.meta['id'] + ": " + full_content)
         document.save('./word/chinapress.docx')

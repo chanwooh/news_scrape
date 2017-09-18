@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unicodecsv
 import scrapy
 import re
@@ -47,73 +48,77 @@ class AggregateSpider(scrapy.Spider):
                 "LMO2NsOjw6bCtA~~",
                 "LMO5NsOsw6w~"]
 
-        names = ["\u8fd9\u624d\u662f\u7f8e\u56fd",
-                 "\u534e\u4eba\u751f\u6d3b\u7f51",
-                 "\u5317\u7f8e\u7701\u94b1\u5feb\u62a5",
-                 "\u7ebd\u7ea6\u541b",
-                 "\u6d1b\u6749\u77f6\u534e\u4eba\u8d44\u8baf\u7f51",
-                 "\u7f8e\u56fd\u0031\u0036\u0038\u8d44\u8baf\u7f51",
-                 "\u5e26\u4f60\u6e38\u904d\u7f8e\u56fd",
-                 "\u7f8e\u56fd\u7559\u5b66\u90a3\u70b9\u4e8b",
-                 "\u7f8e\u56fd\u534e\u4eba\u5bb6\u56ed",
-                 "\u7f8e\u56fd\u4e2d\u6587\u7f51",
-                 "\u5317\u7f8e\u534e\u4eba\u4e4b\u58f0",
-                 "\u5927\u7ebd\u7ea6\u534e\u4eba\u8d44\u8baf",
-                 "\u4e16\u754c\u8bf4",
-                 "\u897f\u96c5\u56fe\u96f7\u5c3c\u5c14",
-                 "\u653f\u89c1",
-                 "\u7ebd\u7ea6\u4eba",
-                 "\u6e7e\u533a\u90a3\u4e9b\u4e8b\u513f",
-                 "\u7f8e\u56fd\u534e\u4eba\u4e4b\u58f0",
-                 "\u4f11\u65af\u987f\u5728\u7ebf",
-                 "\u7f8e\u5e1d\u6b63\u80fd\u91cf",
-                 "\u4e9a\u7279\u5170\u5927\u534e\u4eba\u751f\u6d3b\u7f51",
-                 "\u4e9a\u7279\u5170\u5927\u534e\u4eba\u5708",
-                 "\u7f8e\u56fd\u534e\u4eba",
-                 "\u9009\u7f8e",
-                 "\u7f8e\u56fd\u751f\u6d3b\u5728\u7ebf",
-                 "\u5317\u7f8e\u7559\u5b66\u751f\u65e5\u62a5",
-                 "\u8fd9\u91cc\u662f\u7f8e\u56fd",
-                 "\u5047\u88c5\u5728\u7ebd\u7ea6"]
+        names = [u"这才是美国",
+                 u"华人生活网",
+                 u"北美省钱快报",
+                 u"纽约君",
+                 u"洛杉矶华人资讯网",
+                 u"美国168资讯网",
+                 u"带你游遍美国",
+                 u"美国留学那点事",
+                 u"美国华人家园",
+                 u"美国中文网",
+                 u"北美华人之声",
+                 u"大纽约华人资讯",
+                 u"世界说",
+                 u"西雅图雷尼尔",
+                 u"政见",
+                 u"纽约人",
+                 u"湾区那些事儿",
+                 u"美国华人之声",
+                 u"休斯顿在线",
+                 u"美帝正能量",
+                 u"亚特兰大华人生活网",
+                 u"亚特兰大华人圈",
+                 u"美国华人",
+                 u"选美",
+                 u"美国生活在线",
+                 u"北美留学生日报",
+                 u"这里是美国",
+                 u"假装在纽约"]
 
         # Make requests
         for i in range(0, 28):
-            request = Request(url='http://top.aiweibang.com/article/getarticles/',
-                              callback=self.parse,
-                              method='POST',
-                              headers={'Host':'top.aiweibang.com',
-                                       'Connection':'keep-alive',
-                                       'Pragma':'no-cache',
-                                       'Cache-Control':'no-cache',
-                                       'Accept':'application/json, text/plain, */*',
-                                       'X-Requested-With':'XMLHttpRequest',
-                                       'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
-                                       'Content-Type':'application/json;charset=UTF-8',
-                                       'Referer':"http://top.aiweibang.com/article/" + urls[i],
-                                       'Accept-Encoding':'gzip, deflate',
-                                       'Accept-Language':'en-US,en;q=0.8',
-                                       'Cookie':'Hm_lvt_45cdb9a58c4dd401ed07126f3c04d3c4=1501449933; Hm_lpvt_45cdb9a58c4dd401ed07126f3c04d3c4=1503615904'},
-                              body='{"PageIndex":1,"PageSize":20,"Type":0,"Wechat":"'+urls[i]+'"}')
-            request.meta['name'] = names[i]
-            yield request
+            for j in range(1, 11):
+                request = Request(url='http://top.aiweibang.com/article/getarticles/',
+                                  callback=self.parse,
+                                  method='POST',
+                                  headers={'Host':'top.aiweibang.com',
+                                           'Connection':'keep-alive',
+                                           'Pragma':'no-cache',
+                                           'Cache-Control':'no-cache',
+                                           'Accept':'application/json, text/plain, */*',
+                                           'X-Requested-With':'XMLHttpRequest',
+                                           'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
+                                           'Content-Type':'application/json;charset=UTF-8',
+                                           'Referer':"http://top.aiweibang.com/article/" + urls[i],
+                                           'Accept-Encoding':'gzip, deflate',
+                                           'Accept-Language':'en-US,en;q=0.8',
+                                           'Cookie':'Hm_lvt_45cdb9a58c4dd401ed07126f3c04d3c4=1501449933; Hm_lpvt_45cdb9a58c4dd401ed07126f3c04d3c4=1503615904'},
+                                  body='{"PageIndex":'+str(j)+',"PageSize":20,"Type":0,"Wechat":"'+urls[i]+'"}')
+                request.meta['name'] = names[i]
+                yield request
 
     def parse(self, response):
         global externalCounter
         data = json.loads(response.text)
         size = data['data']['size']
 
-        name = response.meta['name'].decode('unicode-escape').encode('utf-8')
+        name = response.meta['name']
 
         for i in range(0, size):
-            title = data['data']['data'][i]['Title'].encode('utf-8')
-            date = data['data']['data'][i]['PostTime'].encode('utf-8')
-            link_id = data['data']['data'][i]['Id'].encode('utf8')
-            link = "http://top.aiweibang.com/article/url?aid=" + link_id
-            like = data['data']['data'][i]['LikeNum']
-            read = data['data']['data'][i]['ReadNum']
+            try:
+                title = data['data']['data'][i]['Title'].encode('utf-8')
+                date = data['data']['data'][i]['PostTime'].encode('utf-8')
+                link_id = data['data']['data'][i]['Id'].encode('utf8')
+                link = "http://top.aiweibang.com/article/url?aid=" + link_id
+                like = data['data']['data'][i]['LikeNum']
+                read = data['data']['data'][i]['ReadNum']
 
-            with open('./csv/aggregate.csv', "ab") as ffile:
-                writer = unicodecsv.writer(ffile, delimiter=',', quotechar='"', quoting=unicodecsv.QUOTE_ALL)
-                writer.writerow(['AG'+str(externalCounter), name, title, date, link, read, like])
+                with open('./csv/aggregate.csv', "ab") as ffile:
+                    writer = unicodecsv.writer(ffile, delimiter=',', quotechar='"', quoting=unicodecsv.QUOTE_ALL)
+                    writer.writerow(['AG'+str(externalCounter), name, title, date, link, read, like])
 
-            externalCounter += 1
+                externalCounter += 1
+            except:
+                pass
