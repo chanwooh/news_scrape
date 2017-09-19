@@ -6,9 +6,6 @@ from scrapy.selector import Selector
 
 externalCounter = 0
 
-
-
-
 class WorldJournalSpider(scrapy.Spider):
     name = "WorldJournalCSV"
 
@@ -120,19 +117,21 @@ class WorldJournalSpider(scrapy.Spider):
                     yield request
 
     def parse_get_views(self, response):
-        sel = Selector(response)
 
-        script_body = sel.extract()
-        regex = re.compile('{cnt:"(.*?)"}')
+        script_body = response.body
+        regex = re.compile('\{cnt:"(.*?)"}')
         views = regex.search(script_body)
 
         if views:
             views = views.group(1)
-            request = Request(response.meta['link'], callback=self.parse_link)
-            request.meta['views'] = views
-            request.meta['type'] = response.meta['type']
-            request.meta['link'] = response.meta['link']
-            yield request
+        else:
+            views = ""
+
+        request = Request(response.meta['link'], callback=self.parse_link)
+        request.meta['views'] = views
+        request.meta['type'] = response.meta['type']
+        request.meta['link'] = response.meta['link']
+        yield request
 
     def parse_link(self, response):
         global externalCounter

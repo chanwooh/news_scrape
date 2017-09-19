@@ -22,6 +22,11 @@ class ChinaPressSpider(scrapy.Spider):
                 yield request
 
     def parse_link(self, response):
+
+        # Remove random <br> tags for better organization
+        response = response.replace(body=response.body.replace(b'<br>', b'\n'))
+        response = response.replace(body=response.body.replace(b'\n', b''))
+
         sel = Selector(response)
 
         # Content
@@ -38,5 +43,6 @@ class ChinaPressSpider(scrapy.Spider):
             full_content += paragraph
 
         full_content = full_content.encode('unicode-escape').decode('unicode-escape')
-        document.add_paragraph(response.meta['id'] + ": " + full_content)
+        document.add_paragraph(response.meta['id'] + '\n')
+        document.add_paragraph('\n' + full_content)
         document.save('./word/chinapress.docx')

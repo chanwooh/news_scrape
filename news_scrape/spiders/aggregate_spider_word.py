@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from docx import Document
-from docx.shared import Inches
 import scrapy
 import re
 import json
@@ -8,6 +6,8 @@ import docx
 import csv
 from scrapy.http.request import Request
 from scrapy.selector import Selector
+from docx import Document
+from docx.shared import Inches
 
 # Create object for word document
 document = Document()
@@ -26,6 +26,11 @@ class AggregateSpider(scrapy.Spider):
                 yield request
 
     def parse_link(self, response):
+
+        # Remove random <br> tags for better organization
+        response = response.replace(body=response.body.replace(b'<br>', b'\n'))
+        response = response.replace(body=response.body.replace(b'\n', b''))
+
         sel = Selector(response)
 
         # Content
@@ -42,8 +47,8 @@ class AggregateSpider(scrapy.Spider):
             full_content += paragraph
 
         full_content = full_content.encode('unicode-escape').decode('unicode-escape')
-        p = document.add_paragraph('\n')
-        p.add_run(response.meta['id'] + ": ").bold = True
+        p = document.add_paragraph('')
+        p.add_run(response.meta['id'] + '\n').bold = True
 
         if (full_content != ""):
             document.add_paragraph(full_content)

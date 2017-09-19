@@ -42,6 +42,8 @@ class WenxuecitySpider(scrapy.Spider):
 
         # Title
         title = sel.xpath('/html/body/div[3]/div[1]/h3/text()')
+        if not title:
+            title = sel.xpath('//*[@id="preview"]/div[1]/h1')
         title = title.extract()
         title = title[0].encode('utf-8')
 
