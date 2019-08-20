@@ -6,7 +6,34 @@ import json
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
 
-externalCounter = 0
+name_map =  {"A": 0,
+             "B": 0,
+             "C": 0,
+             "D": 0,
+             "E": 0,
+             "F": 0,
+             "G": 0,
+             "H": 0,
+             "I": 0,
+             "J": 0,
+             "K": 0,
+             "L": 0,
+             "M": 0,
+             "N": 0,
+             "O": 0,
+             "P": 0,
+             "Q": 0,
+             "R": 0,
+             "S": 0,
+             "T": 0,
+             "U": 0,
+             "V": 0,
+             "W": 0,
+             "X": 0,
+             "Y": 0,
+             "Z": 0,
+             "a": 0,
+             "b": 0}
 
 class AggregateSpider(scrapy.Spider):
     name = "AggregateCSV"
@@ -77,8 +104,37 @@ class AggregateSpider(scrapy.Spider):
                  u"这里是美国",
                  u"假装在纽约"]
 
+        name_ids =  ["A",
+                     "B",
+                     "C",
+                     "D",
+                     "E",
+                     "F",
+                     "G",
+                     "H",
+                     "I",
+                     "J",
+                     "K",
+                     "L",
+                     "M",
+                     "N",
+                     "O",
+                     "P",
+                     "Q",
+                     "R",
+                     "S",
+                     "T",
+                     "U",
+                     "V",
+                     "W",
+                     "X",
+                     "Y",
+                     "Z",
+                     "a",
+                     "b"]
+
         # Make requests
-        for i in range(0, 28):
+        for i in range(0, 1):
             for j in range(1, 11):
                 request = Request(url='http://top.aiweibang.com/article/getarticles/',
                                   callback=self.parse,
@@ -97,14 +153,17 @@ class AggregateSpider(scrapy.Spider):
                                            'Cookie':'Hm_lvt_45cdb9a58c4dd401ed07126f3c04d3c4=1501449933; Hm_lpvt_45cdb9a58c4dd401ed07126f3c04d3c4=1503615904'},
                                   body='{"PageIndex":'+str(j)+',"PageSize":20,"Type":0,"Wechat":"'+urls[i]+'"}')
                 request.meta['name'] = names[i]
+                request.meta['name_id'] = name_ids[i]
                 yield request
 
     def parse(self, response):
-        global externalCounter
+        global name_map
         data = json.loads(response.text)
+        print response.text
         size = data['data']['size']
 
         name = response.meta['name']
+        name_id = response.meta['name_id']
 
         for i in range(0, size):
             try:
@@ -117,8 +176,8 @@ class AggregateSpider(scrapy.Spider):
 
                 with open('./csv/aggregate.csv', "ab") as ffile:
                     writer = unicodecsv.writer(ffile, delimiter=',', quotechar='"', quoting=unicodecsv.QUOTE_ALL)
-                    writer.writerow(['AG'+str(externalCounter), name, title, date, link, read, like])
+                    writer.writerow(['AG_'+name_id+str(name_map[name_id]), name, title, date, link, read, like])
+                    name_map[name_id] += 1
 
-                externalCounter += 1
             except:
                 pass

@@ -24,10 +24,31 @@ class WenxuecitySpider(scrapy.Spider):
         request.meta['type'] = 'Most Commented'
         yield request
 
+        # More News
+        # The latter number in the below "range(x, y)" determines how many "More News" pages the script will go through
+        # So if you'd like to go through 50 pages, y should equal 51. If you'd like to go through 25 pages, y should equal 26, etc.
+        for i in range(1, 101):
+            url = 'http://www.wenxuecity.com/news/morenews/?page=' + str(i)
+            request = Request(url=url, callback=self.parse_more_news)
+            request.meta['type'] = 'More News'
+            yield request
+
     def parse_most_commented(self, response):
         sel = Selector(response)
 
         links = sel.xpath('/html/body/div[4]/div[4]/div/div[2]/a/@href')
+        string_links = links.extract()
+
+        for link in string_links:
+            request = Request("http://www.wenxuecity.com" + link, callback=self.parse_link)
+            request.meta['type'] = response.meta['type']
+            request.meta['link'] = "http://www.wenxuecity.com" + link
+            yield request
+
+    def parse_more_news(self, response):
+        sel = Selector(response)
+
+        links = sel.xpath('//div[@id="contentList"]/ul/li/a/@href')
         string_links = links.extract()
 
         for link in string_links:

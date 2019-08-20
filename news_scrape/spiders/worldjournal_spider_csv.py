@@ -24,75 +24,86 @@ class WorldJournalSpider(scrapy.Spider):
         yield request
 
         # US Section
-        url = 'http://www.worldjournal.com/topic/%E7%BE%8E%E5%9C%8B%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'United States'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E7%BE%8E%E5%9C%8B%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'United States'
+            yield request
 
         # NY Section
-        url = 'http://www.worldjournal.com/topic/%E7%B4%90%E7%B4%84%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'New York'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E7%B4%90%E7%B4%84%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'New York'
+            yield request
 
         # LA Section
-        url = 'http://www.worldjournal.com/topic/%E6%B4%9B%E6%9D%89%E7%A3%AF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'Los Angeles'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E6%B4%9B%E6%9D%89%E7%A3%AF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'Los Angeles'
+            yield request
 
         # SF Section
-        url = 'http://www.worldjournal.com/topic/%E8%88%8A%E9%87%91%E5%B1%B1%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'San Francisco'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E8%88%8A%E9%87%91%E5%B1%B1%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'San Francisco'
+            yield request
 
         # New Jersey Section
-        url = 'http://www.worldjournal.com/topic/%E6%96%B0%E6%BE%A4%E8%A5%BF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'New Jersey'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E6%96%B0%E6%BE%A4%E8%A5%BF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'New Jersey'
+            yield request
 
         # Boston Section
-        url = 'http://www.worldjournal.com/topic/%E6%B3%A2%E5%A3%AB%E9%A0%93%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'Boston'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E6%B3%A2%E5%A3%AB%E9%A0%93%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'Boston'
+            yield request
 
         # Chicago Section
-        url = 'http://www.worldjournal.com/topic/%E8%8A%9D%E5%8A%A0%E5%93%A5%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'Chicago'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E8%8A%9D%E5%8A%A0%E5%93%A5%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'Chicago'
+            yield request
 
         # D.C. Section
-        url = 'http://www.worldjournal.com/topic/%E5%A4%A7%E8%8F%AF%E5%BA%9C%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'D.C.'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E5%A4%A7%E8%8F%AF%E5%BA%9C%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'D.C.'
+            yield request
 
         # Houston-Dallas Section
-        url = 'http://www.worldjournal.com/topic/%E4%BC%91%E5%A3%AB%E9%A0%93%E9%81%94%E6%8B%89%E6%96%AF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'Houston-Dallas'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E4%BC%91%E5%A3%AB%E9%A0%93%E9%81%94%E6%8B%89%E6%96%AF%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'Houston-Dallas'
+            yield request
 
         # Atlanta Section
-        url = 'http://www.worldjournal.com/topic/%E5%96%AC%E5%B7%9E%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'Atlanta'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E5%96%AC%E5%B7%9E%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'Atlanta'
+            yield request
 
         # San Diego Section
-        url = 'http://www.worldjournal.com/topic/%E8%81%96%E5%9C%B0%E7%89%99%E5%93%A5%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/'
-        request = Request(url=url, callback=self.parse)
-        request.meta['type'] = 'San Diego'
-        yield request
+        for i in range(1, 11):
+            url = 'http://www.worldjournal.com/topic/%E8%81%96%E5%9C%B0%E7%89%99%E5%93%A5%E6%96%B0%E8%81%9E%E7%B8%BD%E8%A6%BD/?pno=' + str(i)
+            request = Request(url=url, callback=self.parse)
+            request.meta['type'] = 'San Diego'
+            yield request
 
     def parse(self, response):
         sel = Selector(response)
 
-        links = sel.xpath('//*[@id="sticky-content"]/div/article/div/h2/a/@href')
+        links = sel.xpath('//div/article/div/h2/a/@href')
         string_links = links.extract()
 
         if response.meta['type'] == 'Most Read':
@@ -135,10 +146,10 @@ class WorldJournalSpider(scrapy.Spider):
 
     def parse_link(self, response):
         global externalCounter
-        sel = Selector(response)
+        sel = Selector(response)    
 
         # Title
-        title = sel.xpath('//*[@id="sticky-content"]/div[1]/div[1]/h1/text()')
+        title = sel.xpath('//div/div[1]/h1/text()')
         title = title.extract()
         title = title[0].encode('utf-8')
 
@@ -149,7 +160,7 @@ class WorldJournalSpider(scrapy.Spider):
         section = response.meta['type']
 
         # Date
-        date = sel.xpath('//*[@id="sticky-content"]/div[1]/div[1]/time/@datetime')
+        date = sel.xpath('//div/div[1]/time/@datetime')
         date = date.extract()
         date = date[0].encode('utf-8')
 

@@ -31,8 +31,13 @@ class WorldJournalSpider(scrapy.Spider):
         sel = Selector(response)
 
         # Content
-        content = sel.xpath('//*[@id="sticky-content"]/div/div/p/text()')
+        content = sel.xpath('//div[@class="post-content"]/p//text()')
         content = content.extract()
+
+        if (len(content) == 0):
+            # Xpath selector didn't match; try another Xpath selector
+            content = sel.xpath('//span[@class="caption"]/text()')
+            content = content.extract()
 
         full_content = ""
         for paragraph in content:

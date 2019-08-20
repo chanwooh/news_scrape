@@ -30,12 +30,12 @@ class ChinaPressSpider(scrapy.Spider):
         sel = Selector(response)
 
         # Content
-        content = sel.xpath('/html/body/section/div/header/div/p//text()')
+        content = sel.xpath('/html/body//div[@class="new_content article-content"]/p/text()')
         content = content.extract()
 
         if (len(content) == 0):
             # Xpath selector didn't match; try another Xpath selector
-            content = sel.xpath('//*[@id="zoom"]/p/text()')
+            content = sel.xpath('//div[@class="newsContent"]/p/text()')
             content = content.extract()
 
         full_content = ""

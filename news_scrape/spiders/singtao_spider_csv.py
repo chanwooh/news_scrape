@@ -7,7 +7,7 @@ from scrapy.selector import Selector
 externalCounter = 0
 
 class SingtaoSpider(scrapy.Spider):
-    name = "SingtaoCSV"
+    name = "SingtaoCSVDeprecated"
 
     def start_requests(self):
 

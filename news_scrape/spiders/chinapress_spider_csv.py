@@ -1,6 +1,7 @@
 import unicodecsv
 import scrapy
 import re
+import json
 from scrapy.http.request import Request
 from scrapy.selector import Selector
 
@@ -23,16 +24,44 @@ class ChinaPressSpider(scrapy.Spider):
         request.meta['type'] = 'Most Read'
         yield request
 
-        # Washington Section
-        url = 'http://news.uschinapress.com/Washington/'
-        request = Request(url=url, callback=self.parse_socal)
-        request.meta['type'] = 'Washington'
-        yield request
+        # # Washington Section
+        # url = 'http://news.uschinapress.com/Washington/'
+        # request = Request(url=url, callback=self.parse_washington)
+        # request.meta['type'] = 'Washington'
+        # yield request
+
+        # New York Section
+        for i in range(0, 10):
+            url = 'http://207.254.179.87/search/searchNyqbZw.jsp?channelname=yaowen&channel=yes&start=' + str(i) + '0'
+            request = Request(url=url, callback=self.parse_ny)
+            request.meta['type'] = 'New York'
+            yield request
+
+        # San Francisco Section
+        for i in range(1, 51):
+            url = 'http://sf.uschinapress.com/san/news_san/' + str(i) + '.shtml'
+            request = Request(url=url, callback=self.parse_sf_sea_tex)
+            request.meta['type'] = 'San Francisco'
+            yield request
+
+        # Seattle Section
+        for i in range(1, 51):
+            url = 'http://sea.uschinapress.com/seattle/xicheng/' + str(i) + '.shtml'
+            request = Request(url=url, callback=self.parse_sf_sea_tex)
+            request.meta['type'] = 'Seattle'
+            yield request
+
+        # Texas Section
+        for i in range(1, 11):
+            url = 'http://texas.uschinapress.com/texas/News/' + str(i) + '.shtml'
+            request = Request(url=url, callback=self.parse_sf_sea_tex)
+            request.meta['type'] = 'Texas'
+            yield request
 
     def parse_most_read(self, response):
         sel = Selector(response)
 
-        links = sel.xpath('//*[@id="index_rank_tab1"]/li/a/@href')
+        links = sel.xpath('//div[@class="ranking"]/div[@class="ranking_bottom"]/div/ul[1]/li/a/@href')
         string_links = links.extract()
 
         for link in string_links:
@@ -41,7 +70,7 @@ class ChinaPressSpider(scrapy.Spider):
             request.meta['link'] = link
             yield request
 
-    def parse_socal(self, response):
+    def parse_washington(self, response):
         sel = Selector(response)
 
         links = sel.xpath('//*[@id="Con_rank_tab1"]/li/a/@href')
@@ -53,33 +82,72 @@ class ChinaPressSpider(scrapy.Spider):
             request.meta['link'] = link
             yield request
 
+    def parse_ny(self, response):
+        str_as_json = response.text[14:]
+        str_as_json = str_as_json[13:]
+        data = json.loads(str_as_json)
+
+        for i in range(0, 10):
+            link = data['docList'][i]['url']
+            request = Request(link, callback=self.parse_link)
+            request.meta['type'] = response.meta['type']
+            request.meta['link'] = link
+            yield request
+
+    def parse_sf_sea_tex(self, response):
+        sel = Selector(response)
+
+        links = sel.xpath('//*[@id="content"]/dl/dt/a/@href')
+        string_links = links.extract()
+
+        for link in string_links:
+            request = Request(link, callback=self.parse_link)
+            request.meta['type'] = response.meta['type']
+            request.meta['link'] = link
+            yield request            
+
     def parse_link(self, response):
         global externalCounter
         sel = Selector(response)
 
         # Title
-        title = sel.xpath('/html/body/section/div/header/h1/text()')
+        title = sel.xpath('//*[@id="content"]/div/h1/text()')
         title = title.extract()
 
         if (len(title) != 0):
             # Xpath selector matched
-            title = title[0].encode('utf-8')
+            try:
+                title = title[0].encode('utf-8')
+            except:
+                title = "Unable to Parse Title"
 
             # Date
-            date = sel.xpath('/html/body/section[1]/div[2]/header/div[1]/span[1]/text()')
+            date = sel.xpath('//*[@id="content"]/div[1]/div[1]/span/text()')
             date = date.extract()
             date = date[0].encode('utf-8')
 
         else:
             # Xpath selector didn't match; try another Xpath selector
-            title = sel.xpath('/html/body/div[3]/div[1]/div[1]/div[1]/h2/text()')
+            title = sel.xpath('//div[@class="title_news"]//text()')
             title = title.extract()
-            title = title[0].encode('utf-8')
 
-            # Date
-            date = sel.xpath('/html/body/div[3]/div[1]/div[1]/div[1]/div/span[1]/text()')
-            date = date.extract()
-            date = date[0].encode('utf-8')
+            if (len(title) != 0):
+                title = title[0].encode('utf-8')
+
+                # Date
+                date = sel.xpath('//div[@class="forn_l"]/span//text()')
+                date = date.extract()
+                date = date[0].encode('utf-8')
+            else:
+                # Xpath selector didn't match; try another Xpath selector
+                title = sel.xpath('//div[2]/header/h1/text()')
+                title = title.extract()
+                title = title[0].encode('utf-8')
+
+                # Date
+                date = sel.xpath('//header/div/span[1]/text()')
+                date = date.extract()
+                date = date[0].encode('utf-8')
 
         # Name of News Site
         news_site = "China Press"
